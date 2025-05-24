@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تواصل مع وسيم نوب</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(90deg, #ff4444, #ff6b6b);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(255, 68, 68, 0.3);
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .status-dot {
+      position: absolute;
+      right: 20px;
+      width: 12px;
+      height: 12px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    #chat-box {
+      flex: 1;
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px 20px 0 0;
+      padding: 20px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .message {
+      margin: 15px 0;
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 85%;
+      word-wrap: break-word;
+      animation: slideIn 0.3s ease-out;
+      position: relative;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .user {
+      background: linear-gradient(135deg, #0084ff, #00a8ff);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 132, 255, 0.3);
+    }
+
+    .wasim {
+      background: linear-gradient(135deg, #ff6b35, #f7931e);
+      color: white;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+    }
+
+    .message-time {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-top: 5px;
+      text-align: left;
+    }
+
+    .typing-indicator {
+      display: none;
+      padding: 15px 20px;
+      background: rgba(255, 107, 53, 0.1);
+      border-radius: 18px;
+      margin: 10px 0;
+      max-width: 85%;
+      margin-right: auto;
+    }
+
+    .typing-dots {
+      display: inline-block;
+    }
+
+    .typing-dots span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff6b35;
+      animation: typing 1.5s infinite ease-in-out;
+      margin: 0 2px;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+    }
+
+    #input-area {
+      background: rgba(30, 30, 30, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      border-radius: 0 0 20px 20px;
+      display: flex;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: none;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border-radius: 25px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    #user-input:focus {
+      border-color: #ff4444;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.2);
+    }
+
+    #user-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .send-btn {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #ff4444, #ff6b6b);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+    }
+
+    .send-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 68, 68, 0.6);
+    }
+
+    .send-btn:active {
+      transform: scale(0.95);
+    }
+
+    .emoji-btn {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .emoji-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .quick-replies {
+      display: flex;
+      gap: 8px;
+      padding: 10px 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .quick-replies::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quick-reply {
+      background: rgba(255, 68, 68, 0.2);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .quick-reply:hover {
+      background: rgba(255, 68, 68, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 480px) {
+      .header {
+        padding: 12px 15px;
+      }
+      
+      .header h1 {
+        font-size: 1.1rem;
+      }
+      
+      #chat-box {
+        padding: 15px;
+      }
+      
+      .message {
+        max-width: 90%;
+        padding: 10px 14px;
+      }
+      
+      #input-area {
+        padding: 12px;
+      }
+      
+      #user-input {
+        padding: 10px 14px;
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+    }
+
+    /* Custom scrollbar */
+    #chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat-box::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    #chat-box::-webkit-scrollbar-thumb {
+      background: rgba(255, 68, 68, 0.5);
+      border-radius: 3px;
+    }
+
+    #chat-box::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 68, 68, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>💬 وسيم نوب</h1>
+    <div class="status-dot"></div>
+  </div>
+
+  <div id="chat-container">
+    <div id="chat-box">
+      <div class="message wasim">
+        <div>👋 أهلاً وسهلاً! أنا وسيم، كيف حالك؟</div>
+        <div class="message-time" id="welcome-time"></div>
+      </div>
+    </div>
+
+    <div class="quick-replies">
+      <div class="quick-reply" onclick="sendQuickReply('مرحبا وسيم')">مرحبا 👋</div>
+      <div class="quick-reply" onclick="sendQuickReply('كيف حالك؟')">كيف حالك؟ 🤔</div>
+      <div class="quick-reply" onclick="sendQuickReply('ماذا تفعل؟')">ماذا تفعل؟ 🎮</div>
+      <div class="quick-reply" onclick="sendQuickReply('حدثني عن نفسك')">عن نفسك 😊</div>
+      <div class="quick-reply" onclick="sendQuickReply('نكتة')">نكتة 😂</div>
+    </div>
+
+    <div class="typing-indicator" id="typing-indicator">
+      <div>وسيم يكتب
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="input-area">
+      <button class="emoji-btn" onclick="addEmoji()">😊</button>
+      <input type="text" id="user-input" placeholder="اكتب رسالتك هنا..." />
+      <button class="send-btn" onclick="sendMessage()">
+        <span>➤</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const responses = [
+      "أنا نوب بس حبوب 🤓💖",
+      "أنا وسيم نوب وفخور بكده 😎✨",
+      "أنا وسيم ألعب روبلوكس كل يوم 🎮🔥",
+      "أنا وسيم تنغ تنغ سحور، تعال نلعب! 😂🎵",
+      "أنا وسيم صوم وأدعيلك 🕌🤲",
+      "عندي أحلى الألعاب في روبلوكس! 🎮🌟",
+      "أنا نوب بس قلبي كبير 💝",
+      "تعال نكون أصدقاء! 👫💫",
+      "أنا وسيم وأحب أتكلم معاك 😊💬",
+      "هل تلعب روبلوكس زيي؟ 🎮❓"
+    ];
+
+    const jokes = [
+      "ليه النوب دايماً مبسوط؟ عشان مش فاهم حاجة! 😂",
+      "إيه الفرق بين النوب والبرو؟ البرو كان نوب زمان! 🤓",
+      "النوب يقول: أنا مش نوب، أنا مبتدئ محترف! 😎"
+    ];
+
+    const emojis = ['😊', '😂', '🤣', '😍', '🥰', '😎', '🤔', '👍', '❤️', '🔥', '✨', '🎮', '🎵', '💫'];
+    let emojiIndex = 0;
+
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString('ar-SA', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true 
+      });
+    }
+
+    function showTypingIndicator() {
+      const typingIndicator = document.getElementById('typing-indicator');
+      typingIndicator.style.display = 'block';
+      const chatBox = document.getElementById('chat-box');
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+      const typingIndicator = document.getElementById('typing-indicator');
+      typingIndicator.style.display = 'none';
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      const chatBox = document.getElementById('chat-box');
+      const userText = input.value.trim();
+      if (userText === '') return;
+
+      // رسالة المستخدم
+      const userMsg = document.createElement('div');
+      userMsg.className = 'message user';
+      userMsg.innerHTML = `
+        <div>🧑‍💬 ${userText}</div>
+        <div class="message-time">${getCurrentTime()}</div>
+      `;
+      chatBox.appendChild(userMsg);
+
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // إظهار مؤشر الكتابة
+      showTypingIndicator();
+
+      // رد وسيم بعد تأخير قصير
+      setTimeout(() => {
+        hideTypingIndicator();
+        
+        let reply;
+        if (userText.includes('نكتة') || userText.includes('اضحكني')) {
+          reply = jokes[Math.floor(Math.random() * jokes.length)];
+        } else {
+          reply = responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        const wasimReply = document.createElement('div');
+        wasimReply.className = 'message wasim';
+        wasimReply.innerHTML = `
+          <div>🤖 ${reply}</div>
+          <div class="message-time">${getCurrentTime()}</div>
+        `;
+        chatBox.appendChild(wasimReply);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, Math.random() * 2000 + 1000); // رد عشوائي بين 1-3 ثواني
+    }
+
+    function sendQuickReply(text) {
+      const input = document.getElementById('user-input');
+      input.value = text;
+      sendMessage();
+    }
+
+    function addEmoji() {
+      const input = document.getElementById('user-input');
+      input.value += emojis[emojiIndex];
+      emojiIndex = (emojiIndex + 1) % emojis.length;
+      input.focus();
+    }
+
+    // إرسال بالضغط على Enter
+    document.getElementById('user-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    // تعيين وقت الرسالة الترحيبية
+    document.getElementById('welcome-time').textContent = getCurrentTime();
+
+    // تأثير التركيز على الإدخال عند تحميل الصفحة
+    window.addEventListener('load', () => {
+      document.getElementById('user-input').focus();
+    });
+  </script>
+</body>
+</html>
