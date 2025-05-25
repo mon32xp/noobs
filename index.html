@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المنوب الأربعة ة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: 
+        linear-gradient(135deg, #0f0f23 0%, #1a1a3a 25%, #2d1b3d 50%, #1e3a5f 75%, #0f0f23 100%);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* نجوم خفيفة في الخلفية */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255, 255, 255, 0.2), transparent),
+        radial-gradient(2px 2px at 90px 40px, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.2), transparent),
+        radial-gradient(1px 1px at 160px 30px, rgba(255, 255, 255, 0.3), transparent);
+      background-repeat: repeat;
+      background-size: 200px 150px;
+      animation: gentleSparkle 15s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes gentleSparkle {
+      from { transform: translateX(0); }
+      to { transform: translateX(200px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #00ff99, #00ccff, #ff6b9d, #c471ed);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGlow 4s ease-in-out infinite;
+      text-shadow: 
+        0 0 10px rgba(0, 255, 153, 0.5),
+        0 0 20px rgba(0, 204, 255, 0.3),
+        0 0 30px rgba(255, 107, 157, 0.2);
+      position: relative;
+    }
+
+    @keyframes textGlow {
+      0%, 100% { 
+        background-position: 0% 50%; 
+        filter: brightness(1);
+      }
+      50% { 
+        background-position: 100% 50%; 
+        filter: brightness(1.2);
+      }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #bbb;
+      margin-bottom: 50px;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.5s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+      border: 2px solid transparent;
+      color: white;
+      padding: 30px 25px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      transform: translateY(50px);
+      animation: slideInUp 0.6s ease-out forwards;
+    }
+
+    .btn:nth-child(1) { animation-delay: 0.1s; }
+    .btn:nth-child(2) { animation-delay: 0.2s; }
+    .btn:nth-child(3) { animation-delay: 0.3s; }
+    .btn:nth-child(4) { animation-delay: 0.4s; }
+    .btn:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes slideInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: all 0.6s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .btn span {
+      display: block;
+      font-size: 16px;
+      color: #aaa;
+      margin-top: 8px;
+      font-weight: normal;
+      transition: color 0.3s;
+    }
+
+    /* توهج الحواف لكل زر */
+    .btn-wasim {
+      border: 2px solid #ff6b6b;
+      box-shadow: 
+        0 0 15px rgba(255, 107, 107, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-wasim:hover {
+      box-shadow: 
+        0 0 25px rgba(255, 107, 107, 0.6),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+    }
+
+    .btn-wasim:hover span {
+      color: #ff6b6b;
+      text-shadow: 0 0 8px rgba(255, 107, 107, 0.6);
+    }
+
+    .btn-marwan {
+      border: 2px solid #4ecdc4;
+      box-shadow: 
+        0 0 15px rgba(78, 205, 196, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-marwan:hover {
+      box-shadow: 
+        0 0 25px rgba(78, 205, 196, 0.6),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 10px rgba(78, 205, 196, 0.8);
+    }
+
+    .btn-marwan:hover span {
+      color: #4ecdc4;
+      text-shadow: 0 0 8px rgba(78, 205, 196, 0.6);
+    }
+
+    .btn-akram {
+      border: 2px solid #ffe66d;
+      box-shadow: 
+        0 0 15px rgba(255, 230, 109, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-akram:hover {
+      box-shadow: 
+        0 0 25px rgba(255, 230, 109, 0.6),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 10px rgba(255, 230, 109, 0.8);
+    }
+
+    .btn-akram:hover span {
+      color: #ffe66d;
+      text-shadow: 0 0 8px rgba(255, 230, 109, 0.6);
+    }
+
+    .btn-botajo {
+      border: 2px solid #ff8b94;
+      box-shadow: 
+        0 0 15px rgba(255, 139, 148, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-botajo:hover {
+      box-shadow: 
+        0 0 25px rgba(255, 139, 148, 0.6),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 10px rgba(255, 139, 148, 0.8);
+    }
+
+    .btn-botajo:hover span {
+      color: #ff8b94;
+      text-shadow: 0 0 8px rgba(255, 139, 148, 0.6);
+    }
+
+    .btn-adam {
+      border: 2px solid #a8e6cf;
+      box-shadow: 
+        0 0 15px rgba(168, 230, 207, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-adam:hover {
+      box-shadow: 
+        0 0 25px rgba(168, 230, 207, 0.6),
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 10px rgba(168, 230, 207, 0.8);
+    }
+
+    .btn-adam:hover span {
+      color: #a8e6cf;
+      text-shadow: 0 0 8px rgba(168, 230, 207, 0.6);
+    }
+
+    /* تأثير النقر */
+    .btn:active {
+      transform: translateY(-3px) scale(0.98);
+    }
+
+    @media (max-width: 768px) {
+      .button-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 20px;
+      }
+      
+      .btn {
+        padding: 25px 20px;
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .btn {
+        padding: 20px 15px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>اختر نوبك المفضل</h1>
+    <p class="subtitle">انقر على الشخصية التي تريد استكشافها</p>
+    
+    <div class="button-container">
+      <a href="was.htm" class="btn btn-wasim">
+        وسيم
+        <span>النوب متتسخ</span>
+      </a>
+      
+      <a href="marwan.html" class="btn btn-marwan">
+        مروان
+        <span>اخوالنوب</span>
+      </a>
+      
+      <a href="COOM.HTML" class="btn btn-akram">
+        أكرم
+        <span>نوب قزم</span>
+      </a>
+      
+      <a href="COOM.HTML" class="btn btn-botajo">
+        بو طاجو
+        <span>ابو شعر</span>
+      </a>
+      
+      <a href="COOM.HTML" class="btn btn-adam">
+        آدم
+        <span>لعب روبلوكس</span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // تأثيرات بسيطة وأنيقة
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        // تأثير ripple خفيف
+        const ripple = document.createElement('span');
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+        
+        ripple.style.width = ripple.style.height = diameter + 'px';
+        ripple.style.left = (e.clientX - this.offsetLeft - radius) + 'px';
+        ripple.style.top = (e.clientY - this.offsetTop - radius) + 'px';
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+        ripple.style.transform = 'scale(0)';
+        ripple.style.animation = 'ripple 0.6s linear';
+        ripple.style.pointerEvents = 'none';
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+    
+    // CSS للتأثير ripple
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ارمي بيض على مروان</title>
+  <style>
+    body {
+      background: #222;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      margin-bottom: 30px;
+      color: #ffdd55;
+    }
+    #marwan {
+      font-size: 40px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      transition: font-size 0.3s ease;
+      user-select: none;
+    }
+    #egg {
+      cursor: pointer;
+      width: 80px;
+      user-select: none;
+      transition: transform 0.2s ease;
+    }
+    #egg:active {
+      transform: scale(0.9);
+    }
+    #message {
+      margin-top: 25px;
+      font-size: 1.3em;
+      color: #f88;
+      height: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <h1>ارمي بيض على مروان!</h1>
+  <div id="marwan">مروان</div>
+  <img id="egg" src="https://i.imgur.com/o1vN7SA.png" alt="بيضة" title="اضغط لرمي البيضة" />
+  <div id="message"></div>
+
+  <script>
+    const marwan = document.getElementById('marwan');
+    const egg = document.getElementById('egg');
+    const message = document.getElementById('message');
+
+    let hits = 0;
+    const maxHits = 10;
+    const initialSize = 40;
+
+    egg.addEventListener('click', () => {
+      if (hits < maxHits) {
+        hits++;
+        let newSize = initialSize + hits * 5; // يكبر 5px في كل ضربة
+        marwan.style.fontSize = newSize + 'px';
+
+        message.textContent = `رميت عليه البيضة! (${hits} من ${maxHits})`;
+      }
+      if (hits === maxHits) {
+        message.textContent = 'مروان تحول إلى دجاجة! 🐔';
+        marwan.textContent = '🐔 مروان الدجاجة';
+        marwan.style.fontSize = '60px';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وسيم نوب</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .text-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px 30px;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      text-align: center;
+      animation: float 3s ease-in-out infinite;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+    }
+
+    .text-box h1 {
+      font-size: 2.5em;
+      background: linear-gradient(45deg, #d00000, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      line-height: 1.2;
+    }
+
+    .emoji-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .emoji {
+      font-size: 2em;
+      animation: spin 2s linear infinite;
+      animation-delay: var(--delay);
+    }
+
+    .fun-button {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(238, 90, 111, 0.4);
+    }
+
+    .fun-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(238, 90, 111, 0.6);
+    }
+
+    .fun-button:active {
+      transform: translateY(-1px);
+    }
+
+    /* الزخارف المتحركة في الخلفية */
+    .bg-decoration {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float-bg 6s ease-in-out infinite;
+    }
+
+    .bg-decoration:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .bg-decoration:nth-child(2) {
+      width: 60px;
+      height: 60px;
+      top: 20%;
+      right: 15%;
+      animation-delay: 2s;
+    }
+
+    .bg-decoration:nth-child(3) {
+      width: 100px;
+      height: 100px;
+      bottom: 15%;
+      left: 20%;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% { 
+        transform: translateY(-20px) rotate(1deg);
+      }
+    }
+
+    @keyframes float-bg {
+      0%, 100% { 
+        transform: translateY(0px);
+        opacity: 0.1;
+      }
+      50% { 
+        transform: translateY(-30px);
+        opacity: 0.3;
+      }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* تصميم متجاوب للجوال */
+    @media (max-width: 768px) {
+      .back-button {
+        top: 15px;
+        right: 15px;
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+
+      .text-box {
+        padding: 30px 20px;
+        margin: 0 10px;
+      }
+
+      .text-box h1 {
+        font-size: 2em;
+        line-height: 1.3;
+      }
+
+      .emoji {
+        font-size: 1.5em;
+      }
+
+      .fun-button {
+        padding: 12px 25px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .text-box h1 {
+        font-size: 1.6em;
+      }
+
+      .text-box {
+        padding: 25px 15px;
+      }
+
+      .back-button {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+    }
+
+    /* تأثيرات إضافية للتفاعل */
+    .text-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <!-- زخارف الخلفية -->
+  <div class="bg-decoration"></div>
+  <div class="bg-decoration"></div>
+  <div class="bg-decoration"></div>
+
+  <!-- زر العودة -->
+  <a href="#" class="back-button" onclick="goBack()">
+    ← العودة
+  </a>
+
+  <div class="container">
+    <div class="text-box">
+      <h1>وسيم لا يستطيع اللعب لأنه نوب</h1>
+      <div class="emoji-container">
+        <span class="emoji" style="--delay: 0s">🎮</span>
+        <span class="emoji" style="--delay: 0.5s">😅</span>
+        <span class="emoji" style="--delay: 1s">🤷‍♂️</span>
+      </div>
+    </div>
+
+    <button class="fun-button" onclick="showMessage()">
+      اضغط للمرح! 🎉
+    </button>
+  </div>
+
+  <script>
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        // إذا لم يكن هناك صفحة سابقة، يمكن توجيه المستخدم لصفحة رئيسية
+        alert('لا توجد صفحة سابقة للعودة إليها!');
+      }
+    }
+
+    function showMessage() {
+      const messages = [
+        'وسيم يحتاج للتدريب أكثر! 💪',
+        'ربما المرة القادمة يا وسيم! 😄',
+        'لا تيأس وسيم، الممارسة تجعلك مثالياً! 🌟',
+        'وسيم نوب ولكنه محبوب! ❤️',
+        'حتى أفضل اللاعبين كانوا نوب في البداية! 🚀'
+      ];
+      
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      alert(randomMessage);
+      
+      // تأثير بصري إضافي
+      document.querySelector('.text-box').style.animation = 'float 0.5s ease-in-out';
+      setTimeout(() => {
+        document.querySelector('.text-box').style.animation = 'float 3s ease-in-out infinite';
+      }, 500);
+    }
+
+    // تأثير تفاعلي عند تحريك الماوس
+    document.addEventListener('mousemove', (e) => {
+      const decorations = document.querySelectorAll('.bg-decoration');
+      decorations.forEach((decoration, index) => {
+        const speed = (index + 1) * 0.01;
+        const x = e.clientX * speed;
+        const y = e.clientY * speed;
+        decoration.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    });
+  </script>
+</body>
+</html>

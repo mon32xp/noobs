@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🛠️ مروان يصلح الكمبيوتر</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Tahoma', sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      color: #00ffff;
+      font-size: 2.4em;
+    }
+    p {
+      font-size: 1.1em;
+      margin-bottom: 25px;
+      color: #aaa;
+    }
+    .tools {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .tool {
+      background-color: #2c2c2c;
+      border: 2px solid #00ffff;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 120px;
+      transition: all 0.3s ease;
+    }
+    .tool:hover {
+      background-color: #00ffff;
+      color: black;
+      transform: scale(1.05);
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1em;
+      background-color: #00ffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #00cccc;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 1.3em;
+      min-height: 50px;
+      color: #ff5555;
+    }
+    img {
+      margin-top: 20px;
+      width: 200px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛠️ مروان يصلح الكمبيوتر</h1>
+  <p>اختر أداتين لمساعدة مروان في إصلاح الكمبيوتر (بس لا يخربه أكثر 😂)</p>
+  <div class="tools">
+    <div class="tool" onclick="selectTool('مطرقة')">🔨 مطرقة</div>
+    <div class="tool" onclick="selectTool('شاحن')">🔌 شاحن</div>
+    <div class="tool" onclick="selectTool('موزة')">🍌 موزة</div>
+    <div class="tool" onclick="selectTool('ماوس')">🖱️ ماوس</div>
+    <div class="tool" onclick="selectTool('مفك')">🪛 مفك</div>
+  </div>
+  <button onclick="fixComputer()">إصلاح الكمبيوتر 💻</button>
+  <div id="result"></div>
+  <img id="reaction" src="" alt="ردة فعل">
+
+  <script>
+    let tools = [];
+
+    function selectTool(tool) {
+      if (tools.length < 2) {
+        tools.push(tool);
+      } else {
+        alert("اختر فقط أداتين! ثم اضغط إصلاح الكمبيوتر.");
+      }
+    }
+
+    function fixComputer() {
+      const combo = tools.sort().join(' + ');
+      let message = '';
+      let imgSrc = '';
+
+      switch (combo) {
+        case 'مطرقة + موزة':
+        case 'مفك + موزة':
+        case 'ماوس + موزة':
+          message = '🍌💥 مروان حاول يصلح الجهاز بالموزة! النتيجة: انفجار!';
+          imgSrc = 'https://i.imgur.com/YOwD5K7.png';
+          break;
+        case 'مطرقة + مفك':
+          message = '🔧🔨 تقريبًا صح! لكن مروان كسر الشاشة بالمطرقة!';
+          imgSrc = 'https://i.imgur.com/1HnWJth.png';
+          break;
+        case 'ماوس + شاحن':
+          message = '✅ تم إصلاح المشكلة... بالصدفة! مروان فرحان!';
+          imgSrc = 'https://i.imgur.com/5yU1HTu.png';
+          break;
+        case 'مفك + شاحن':
+          message = '🔌🪛 تم تصليح جزء بسيط، لكن الجهاز صار يسخن كثير!';
+          imgSrc = 'https://i.imgur.com/WZFP7a6.png';
+          break;
+        default:
+          message = '😂 كالعادة، مروان خبص كل شيء! الكمبيوتر دخن!';
+          imgSrc = 'https://i.imgur.com/Lya5R5F.png';
+      }
+
+      document.getElementById('result').innerText = message;
+      const img = document.getElementById('reaction');
+      img.src = imgSrc;
+      img.style.display = 'block';
+      tools = [];
+    }
+  </script>
+</body>
+</html>

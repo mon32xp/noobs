@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🍳 رحلة مروان من النوب إلى الشيف</title>
+  <link rel="stylesheet" href="m1.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🍳 رحلة مروان من النوب إلى الشيف</h1>
+      <p>ساعد مروان يصبح شيف محترف!</p>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+      <div class="chef-name" id="chef-name">مروان النوب 😅</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="goal-text" id="goal-text">الهدف: اطبخ 10 وصفات ناجحة لتصبح روان الشيف! 🏆</div>
+      
+      <div class="stats">
+        <div class="stat">
+          <div>💰 النقاط</div>
+          <div class="stat-value" id="points">100</div>
+        </div>
+        <div class="stat">
+          <div>🏆 الوصفات الناجحة</div>
+          <div class="stat-value" id="recipes">0</div>
+        </div>
+        <div class="stat">
+          <div>⭐ المستوى</div>
+          <div class="stat-value" id="level">مبتدئ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kitchen -->
+    <div class="kitchen">
+      <h2 class="section-title">🏠 مطبخ <span id="kitchen-owner">مروان</span></h2>
+      <div class="stove">
+        <div class="stove-burner"></div>
+      </div>
+      <div class="cooking-pot"></div>
+    </div>
+
+    <!-- Ingredients -->
+    <div class="ingredients-section">
+      <h2 class="section-title">🧄 المكونات المتاحة</h2>
+      <div class="ingredients" id="ingredients">
+        <!-- سيتم ملؤها بـ JavaScript -->
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div style="text-align: center; margin: 30px 0;">
+      <button class="btn btn-cook" onclick="cook()">🔥 ابدأ الطبخ</button>
+      <button class="btn btn-shop" onclick="openShop()">🛒 المتجر</button>
+      <button class="btn btn-cook" onclick="resetSelection()" style="background: linear-gradient(135deg, #95a5a6, #7f8c8d);">🔄 إعادة تعيين</button>
+    </div>
+
+    <!-- Results -->
+    <div class="result" id="result">
+      <div class="result-text" id="result-text">اختر مكونين وابدأ الطبخ!</div>
+      <img class="reaction-img" id="reaction-img" src="" alt="ردة فعل">
+    </div>
+  </div>
+
+  <!-- Shop Modal -->
+  <div id="shopModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeShop()">&times;</span>
+      <h2 style="text-align: center; margin-bottom: 20px;">🛒 متجر المكونات</h2>
+      <p style="text-align: center; margin-bottom: 30px;">اشتر مكونات جديدة لتوسيع مطبخك!</p>
+      
+      <div class="shop-items" id="shop-items">
+        <!-- سيتم ملؤها بـ JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Modal -->
+  <div id="victoryModal" class="victory-modal">
+    <div class="victory-content">
+      <h1 class="victory-title">🎉 مبروك! 🎉</h1>
+      <div class="victory-text">
+        لقد فزت! مروان أصبح <strong>روان الشيف المحترف</strong>! 👨‍🍳<br>
+        الآن نعرف مكانك في المطبخ... أنت الأفضل! 🏆
+      </div>
+      <button class="btn btn-cook" onclick="restartGame()">🔄 ابدأ من جديد</button>
+      <button class="btn btn-shop" onclick="closeVictory()">🎯 استمر في اللعب</button>
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    let gameState = {
+      points: 100,
+      successfulRecipes: 0,
+      totalAttempts: 0,
+      level: 'مبتدئ',
+      selectedIngredients: [],
+      ownedIngredients: ['بيض', 'سكر', 'ملح', 'كتشب', 'شوكولاتة'],
+      hasWon: false
+    };
+
+    // All available ingredients
+    const allIngredients = {
+      'بيض': { emoji: '🥚', price: 0, owned: true },
+      'سكر': { emoji: '🍬', price: 0, owned: true },
+      'ملح': { emoji: '🧂', price: 0, owned: true },
+      'كتشب': { emoji: '🍅', price: 0, owned: true },
+      'شوكولاتة': { emoji: '🍫', price: 0, owned: true },
+      'لحم': { emoji: '🥩', price: 50, owned: false },
+      'دجاج': { emoji: '🍗', price: 40, owned: false },
+      'سمك': { emoji: '🐟', price: 35, owned: false },
+      'جبن': { emoji: '🧀', price: 30, owned: false },
+      'خبز': { emoji: '🍞', price: 20, owned: false },
+      'طماطم': { emoji: '🍅', price: 15, owned: false },
+      'بصل': { emoji: '🧅', price: 15, owned: false },
+      'فلفل': { emoji: '🌶️', price: 25, owned: false },
+      'ثوم': { emoji: '🧄', price: 10, owned: false },
+      'أرز': { emoji: '🍚', price: 20, owned: false },
+      'مكرونة': { emoji: '🍝', price: 25, owned: false },
+      'حليب': { emoji: '🥛', price: 15, owned: false },
+      'زبدة': { emoji: '🧈', price: 25, owned: false },
+      'فانيليا': { emoji: '🌟', price: 45, owned: false },
+      'قرفة': { emoji: '🎋', price: 30, owned: false }
+    };
+
+    // Cooking combinations with enhanced results
+    const cookingCombos = {
+      'بيض + كتشب': { 
+        message: '🤯 انفجار في المطبخ! مروان النوب خلط أشياء غريبة!', 
+        points: -10, 
+        success: false
+      },
+      'بيض + شوكولاتة': { 
+        message: '😵 طعم غريب جداً! مروان المبدع!', 
+        points: -5, 
+        success: false
+      },
+      'سكر + ملح': { 
+        message: '😖 الطعم فظيع! مروان طبخ أكلة لا تطاق!', 
+        points: -15, 
+        success: false
+      },
+      'بيض + سكر': { 
+        message: '👏 كاسترد بسيط! مروان بدأ يتعلم!', 
+        points: 25, 
+        success: true
+      },
+      'شوكولاتة + سكر': { 
+        message: '🍫 حلوى رائعة! أول نجاح لمروان!', 
+        points: 40, 
+        success: true
+      },
+      'لحم + ملح': { 
+        message: '🥩 شواء لذيذ! مروان أصبح طباخ!', 
+        points: 60, 
+        success: true
+      },
+      'دجاج + فلفل': { 
+        message: '🍗 دجاج حار ممتاز! مستوى متقدم!', 
+        points: 75, 
+        success: true
+      },
+      'أرز + دجاج': { 
+        message: '🍚 كبسة رائعة! مروان الشيف!', 
+        points: 100, 
+        success: true
+      },
+      'مكرونة + جبن': { 
+        message: '🍝 باستا بالجبن! إبداع إيطالي!', 
+        points: 85, 
+        success: true
+      },
+      'سمك + ثوم': { 
+        message: '🐟 سمك بالثوم! وصفة البحر الأبيض!', 
+        points: 90, 
+        success: true
+      },
+      'خبز + جبن': { 
+        message: '🥪 ساندويش جبن لذيذ!', 
+        points: 30, 
+        success: true
+      },
+      'طماطم + بصل': { 
+        message: '🥗 سلطة منعشة!', 
+        points: 35, 
+        success: true
+      },
+      'حليب + سكر': { 
+        message: '🥛 مشروب حلو ولذيذ!', 
+        points: 20, 
+        success: true
+      }
+    };
+
+    // Initialize game
+    function initGame() {
+      updateStats();
+      updateProgress();
+      renderIngredients();
+      renderShop();
+    }
+
+    // Update stats display
+    function updateStats() {
+      document.getElementById('points').textContent = gameState.points;
+      document.getElementById('recipes').textContent = gameState.successfulRecipes;
+      
+      // Update level and name based on progress
+      let chefName, level, nameClass;
+      if (gameState.successfulRecipes < 3) {
+        chefName = 'مروان النوب 😅';
+        level = 'مبتدئ';
+        nameClass = 'noob';
+      } else if (gameState.successfulRecipes < 7) {
+        chefName = 'مروان المتوسط 🙂';
+        level = 'متوسط';
+        nameClass = 'intermediate';
+      } else if (gameState.successfulRecipes < 10) {
+        chefName = 'مروان المحترف 😎';
+        level = 'متقدم';
+        nameClass = 'expert';
+      } else {
+        chefName = 'روان الشيف 👨‍🍳';
+        level = 'خبير';
+        nameClass = 'expert';
+      }
+      
+      document.getElementById('level').textContent = level;
+      const chefNameEl = document.getElementById('chef-name');
+      chefNameEl.textContent = chefName;
+      chefNameEl.className = 'chef-name ' + nameClass;
+      
+      document.getElementById('kitchen-owner').textContent = gameState.successfulRecipes >= 10 ? 'روان' : 'مروان';
+    }
+
+    // Update progress bar
+    function updateProgress() {
+      const progress = Math.min((gameState.successfulRecipes / 10) * 100, 100);
+      document.getElementById('progress-fill').style.width = progress + '%';
+      
+      if (gameState.successfulRecipes >= 10 && !gameState.hasWon) {
+        gameState.hasWon = true;
+        setTimeout(() => {
+          document.getElementById('victoryModal').style.display = 'block';
+        }, 1000);
+      }
+      
+      if (gameState.successfulRecipes >= 10) {
+        document.getElementById('goal-text').textContent = '🎉 تهانينا! لقد أصبحت روان الشيف المحترف! 🏆';
+      } else {
+        document.getElementById('goal-text').textContent = `الهدف: اطبخ ${10 - gameState.successfulRecipes} وصفات ناجحة أخرى لتصبح روان الشيف! 🏆`;
+      }
+    }
+
+    // Render available ingredients
+    function renderIngredients() {
+      const container = document.getElementById('ingredients');
+      container.innerHTML = '';
+      
+      gameState.ownedIngredients.forEach(name => {
+        const ingredient = allIngredients[name];
+        const div = document.createElement('div');
+        div.className = 'ingredient';
+        div.onclick = () => selectIngredient(name);
+        div.innerHTML = `
+          <span class="ingredient-emoji">${ingredient.emoji}</span>
+          <div class="ingredient-name">${name}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Render shop items
+    function renderShop() {
+      const container = document.getElementById('shop-items');
+      container.innerHTML = '';
+      
+      Object.entries(allIngredients).forEach(([name, ingredient]) => {
+        if (!gameState.ownedIngredients.includes(name)) {
+          const div = document.createElement('div');
+          div.className = 'shop-item';
+          div.innerHTML = `
+            <span class="ingredient-emoji">${ingredient.emoji}</span>
+            <div class="ingredient-name">${name}</div>
+            <div class="ingredient-price">💰 ${ingredient.price} نقطة</div>
+            <button class="btn btn-shop" onclick="buyIngredient('${name}')" 
+                    ${gameState.points < ingredient.price ? 'disabled' : ''}>
+              ${gameState.points >= ingredient.price ? 'شراء' : 'غير كافي'}
+            </button>
+          `;
+          container.appendChild(div);
+        }
+      });
+    }
+
+    // Select ingredient
+    function selectIngredient(name) {
+      if (gameState.selectedIngredients.length < 2 && !gameState.selectedIngredients.includes(name)) {
+        gameState.selectedIngredients.push(name);
+        updateIngredientSelection();
+      }
+    }
+
+    // Update ingredient selection visual
+    function updateIngredientSelection() {
+      document.querySelectorAll('.ingredient').forEach(el => {
+        const name = el.querySelector('.ingredient-name').textContent;
+        if (gameState.selectedIngredients.includes(name)) {
+          el.classList.add('selected');
+        } else {
+          el.classList.remove('selected');
+        }
+      });
+    }
+
+    // Reset selection
+    function resetSelection() {
+      gameState.selectedIngredients = [];
+      updateIngredientSelection();
+      document.getElementById('result-text').textContent = 'اختر مكونين وابدأ الطبخ!';
+      document.getElementById('reaction-img').style.display = 'none';
+    }
+
+    // Cook function
+    function cook() {
+      if (gameState.selectedIngredients.length !== 2) {
+        alert('اختر مكونين بالضبط!');
+        return;
+      }
+
+      gameState.totalAttempts++;
+      const combo = gameState.selectedIngredients.sort().join(' + ');
+      const result = cookingCombos[combo] || {
+        message: '😂 مروان النوب خبصها كالعادة!',
+        points: -5,
+        success: false
+      };
+
+      // Update points
+      gameState.points += result.points;
+      if (gameState.points < 0) gameState.points = 0;
+
+      // Update successful recipes count
+      if (result.success) {
+        gameState.successfulRecipes++;
+      }
+
+      // Display result with motivational messages
+      let displayMessage = result.message;
+      if (result.success) {
+        if (gameState.successfulRecipes === 1) {
+          displayMessage += '\n🎉 أول نجاح! استمر هكذا!';
+        } else if (gameState.successfulRecipes === 5) {
+          displayMessage += '\n🔥 أصبحت أفضل! نصف الطريق!';
+        } else if (gameState.successfulRecipes === 9) {
+          displayMessage += '\n⚡ وصفة واحدة فقط وتصبح روان الشيف!';
+        }
+      }
+      
+      displayMessage += ` (${result.points > 0 ? '+' : ''}${result.points} نقطة)`;
+      document.getElementById('result-text').textContent = displayMessage;
+
+      // Update stats and progress
+      updateStats();
+      updateProgress();
+      
+      // Reset selection after delay
+      setTimeout(() => resetSelection(), 3000);
+    }
+
+    // Shop functions
+    function openShop() {
+      document.getElementById('shopModal').style.display = 'block';
+      renderShop();
+    }
+
+    function closeShop() {
+      document.getElementById('shopModal').style.display = 'none';
+    }
+
+    function buyIngredient(name) {
+      const ingredient = allIngredients[name];
+      if (gameState.points >= ingredient.price) {
+        gameState.points -= ingredient.price;
+        gameState.ownedIngredients.push(name);
+        updateStats();
+        renderIngredients();
+        renderShop();
+        
+        // Show success message
+        alert(`تم شراء ${name} بنجاح! 🎉`);
+      }
+    }
+
+    // Victory functions
+    function closeVictory() {
+      document.getElementById('victoryModal').style.display = 'none';
+    }
+
+    function restartGame() {
+      gameState = {
+        points: 100,
+        successfulRecipes: 0,
+        totalAttempts: 0,
+        level: 'مبتدئ',
+        selectedIngredients: [],
+        ownedIngredients: ['بيض', 'سكر', 'ملح', 'كتشب', 'شوكولاتة'],
+        hasWon: false
+      };
+      
+      // Reset all ingredients to initial state
+      Object.keys(allIngredients).forEach(name => {
+        if (['بيض', 'سكر', 'ملح', 'كتشب', 'شوكولاتة'].includes(name)) {
+          allIngredients[name].owned = true;
+        } else {
+          allIngredients[name].owned = false;
+        }
+      });
+      
+      closeVictory();
+      initGame();
+      resetSelection();
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const shopModal = document.getElementById('shopModal');
+      const victoryModal = document.getElementById('victoryModal');
+      
+      if (event.target === shopModal) {
+        closeShop();
+      }
+      if (event.target === victoryModal) {
+        closeVictory();
+      }
+    }
+
+    // Initialize game when page loads
+    window.onload = initGame;
+  </script>
+</body>
+</html>

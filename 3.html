@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>🧼 حمّام وسيم نوب - المتجر</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      text-align: center;
+      padding: 10px;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+    
+    h1 {
+      color: #00ffff;
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      margin: 10px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .instructions {
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      margin-bottom: 20px;
+      color: #ffcc00;
+    }
+    
+    #game-container {
+      position: relative;
+      width: min(90vw, 350px);
+      height: min(90vw, 350px);
+      margin: 20px auto;
+      border: 3px solid #00ffff;
+      background: linear-gradient(45deg, #333, #555);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    
+    #wasim {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.1s;
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+    }
+    
+    #dirt-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+    
+    .dirt-spot {
+      position: absolute;
+      background: radial-gradient(circle, #8B4513, #654321, #3E2723);
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(180deg); }
+    }
+    
+    #wasim:active {
+      transform: scale(0.95);
+      filter: brightness(1.2);
+    }
+    
+    .progress-container {
+      margin: 20px auto;
+      width: min(80vw, 300px);
+    }
+    
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+    }
+    
+    #soap-progress {
+      height: 25px;
+      background: #555;
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid #00ffff;
+      position: relative;
+    }
+    
+    #soap-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #00ffcc, #00ff88);
+      transition: width 0.3s ease-out;
+      position: relative;
+    }
+    
+    #soap-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 2s infinite;
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    #timer-container {
+      margin: 15px 0;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      color: #ff6b6b;
+    }
+    
+    #message {
+      margin: 20px 0;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      color: #ffcc00;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 15px 25px;
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(45deg, #00ffff, #00cccc);
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(0,255,255,0.3);
+      min-width: 120px;
+      touch-action: manipulation;
+    }
+    
+    button:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 8px rgba(0,255,255,0.5);
+    }
+    
+    button:disabled {
+      background: #666;
+      color: #999;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    
+    .stats {
+      margin: 20px 0;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .stat-item {
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 10px;
+      min-width: 80px;
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+    }
+    
+    .click-effect {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: ripple 0.6s ease-out;
+      z-index: 10;
+    }
+    
+    .soap-bubble {
+      position: absolute;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(0,255,255,0.4));
+      border-radius: 50%;
+      pointer-events: none;
+      animation: bubble-float 1s ease-out forwards;
+      z-index: 5;
+    }
+    
+    @keyframes bubble-float {
+      0% {
+        transform: scale(0) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5) translateY(-50px);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+    
+    .difficulty-selector {
+      margin: 15px 0;
+    }
+    
+    .difficulty-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .difficulty-btn {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #00ffff;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .difficulty-btn.active {
+      background: #00ffff;
+      color: black;
+    }
+    
+    /* متجر التنظيف */
+    #shop-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      overflow-y: auto;
+    }
+    
+    .shop-content {
+      background: linear-gradient(135deg, #2a5298, #1e3c72);
+      margin: 5% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 20px;
+      border: 2px solid #00ffff;
+      position: relative;
+    }
+    
+    .shop-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .shop-title {
+      color: #00ffff;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    
+    .close-shop {
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .coins-display {
+      background: rgba(255,215,0,0.2);
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid gold;
+    }
+    
+    .shop-items {
+      display: grid;
+      gap: 15px;
+    }
+    
+    .shop-item {
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid #555;
+      transition: all 0.2s;
+    }
+    
+    .shop-item:hover {
+      border-color: #00ffff;
+      background: rgba(0,255,255,0.1);
+    }
+    
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .item-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    
+    .item-price {
+      color: gold;
+      font-weight: bold;
+    }
+    
+    .item-description {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    
+    .buy-btn {
+      background: linear-gradient(45deg, #ffd700, #ffed4a);
+      color: black;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    
+    .buy-btn:disabled {
+      background: #666;
+      color: #999;
+      cursor: not-allowed;
+    }
+    
+    .owned {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .power-ups {
+      margin: 15px 0;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    
+    .power-up {
+      display: inline-block;
+      margin: 5px;
+      padding: 5px 10px;
+      background: rgba(0,255,255,0.2);
+      border-radius: 15px;
+      font-size: 0.8rem;
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      button {
+        width: 90%;
+        max-width: 250px;
+      }
+      
+      .shop-content {
+        margin: 2% auto;
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🧼 حمّام وسيم نوب</h1>
+  <p class="instructions">اضغط على وسيم بسرعة لتنظيفه قبل ما ينفد الوقت!</p>
+  
+  <div class="difficulty-selector">
+    <div class="difficulty-buttons">
+      <div class="difficulty-btn" onclick="setDifficulty('easy')">سهل</div>
+      <div class="difficulty-btn active" onclick="setDifficulty('medium')">متوسط</div>
+      <div class="difficulty-btn" onclick="setDifficulty('hard')">صعب</div>
+    </div>
+  </div>
+  
+  <div id="game-container">
+    <img id="wasim" src="body (1).png" alt="وسيم نوب" ontouchstart="cleanWasim(event)" onclick="cleanWasim(event)">
+    <div id="dirt-overlay"></div>
+  </div>
+  
+  <div class="progress-container">
+    <div class="progress-label">
+      <span>🧼 النظافة</span>
+      <span id="progress-text">0%</span>
+    </div>
+    <div id="soap-progress">
+      <div id="soap-bar"></div>
+    </div>
+  </div>
+  
+  <div id="timer-container">
+    ⏰ الوقت المتبقي: <span id="timer">20</span> ثانية
+  </div>
+  
+  <div class="stats">
+    <div class="stat-item">
+      <div>🎯 النقرات</div>
+      <div id="click-count">0</div>
+    </div>
+    <div class="stat-item">
+      <div>🏆 أفضل نتيجة</div>
+      <div id="best-score">0</div>
+    </div>
+    <div class="stat-item">
+      <div>🪙 العملات</div>
+      <div id="coins">100</div>
+    </div>
+  </div>
+  
+  <div class="power-ups" id="active-powerups" style="display: none;">
+    <strong>التحسينات النشطة:</strong>
+    <div id="powerup-list"></div>
+  </div>
+  
+  <div id="message"></div>
+  
+  <div class="buttons">
+    <button id="restart-btn" onclick="restartGame()">🔄 إعادة اللعب</button>
+    <button id="pause-btn" onclick="togglePause()">⏸️ إيقاف مؤقت</button>
+    <button onclick="openShop()">🛒 متجر التنظيف</button>
+    <button onclick="goToHome()">العودة ◀</button>
+  </div>
+
+  <!-- متجر التنظيف -->
+  <div id="shop-modal">
+    <div class="shop-content">
+      <div class="shop-header">
+        <h2 class="shop-title">🛒 متجر مستلزمات التنظيف</h2>
+        <button class="close-shop" onclick="closeShop()">×</button>
+      </div>
+      
+      <div class="coins-display">
+        <span>🪙 عملاتك: <strong id="shop-coins">100</strong></span>
+      </div>
+      
+      <div class="shop-items">
+        <div class="shop-item">
+          <div class="item-header">
+            <span class="item-name">🧽 إسفنجة قوية</span>
+            <span class="item-price">50 🪙</span>
+          </div>
+          <div class="item-description">تزيد قوة التنظيف بنسبة 50%</div>
+          <button class="buy-btn" onclick="buyItem('strong_sponge', 50)">شراء</button>
+        </div>
+        
+        <div class="shop-item">
+          <div class="item-header">
+            <span class="item-name">🧴 صابون سحري</span>
+            <span class="item-price">75 🪙</span>
+          </div>
+          <div class="item-description">يضاعف النقاط المكتسبة</div>
+          <button class="buy-btn" onclick="buyItem('magic_soap', 75)">شراء</button>
+        </div>
+        
+        <div class="shop-item">
+          <div class="item-header">
+            <span class="item-name">⏰ وقت إضافي</span>
+            <span class="item-price">30 🪙</span>
+          </div>
+          <div class="item-description">يضيف 5 ثوانٍ إضافية</div>
+          <button class="buy-btn" onclick="buyItem('extra_time', 30)">شراء</button>
+        </div>
+        
+        <div class="shop-item">
+          <div class="item-header">
+            <span class="item-name">💨 تنظيف تلقائي</span>
+            <span class="item-price">100 🪙</span>
+          </div>
+          <div class="item-description">ينظف تلقائياً كل ثانية</div>
+          <button class="buy-btn" onclick="buyItem('auto_clean', 100)">شراء</button>
+        </div>
+        
+        <div class="shop-item">
+          <div class="item-header">
+            <span class="item-name">🌟 حماية من الأوساخ</span>
+            <span class="item-price">80 🪙</span>
+          </div>
+          <div class="item-description">يقلل ظهور الأوساخ الجديدة</div>
+          <button class="buy-btn" onclick="buyItem('dirt_protection', 80)">شراء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="3.js"></script> 

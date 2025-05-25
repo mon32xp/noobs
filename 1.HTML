@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>وسيم نوب محارب الوحوش - من نوب إلى أسطورة</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 10px;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="%23ffffff" opacity="0.3"/><circle cx="80" cy="40" r="0.5" fill="%23ffffff" opacity="0.5"/><circle cx="40" cy="80" r="1.5" fill="%23ffffff" opacity="0.2"/><circle cx="90" cy="90" r="0.8" fill="%23ffffff" opacity="0.4"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+      z-index: -1;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      animation: titleGlow 2s ease-in-out infinite alternate;
+      background: linear-gradient(45deg, #ffd700, #ff6b35, #e74c3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @keyframes titleGlow {
+      from { filter: drop-shadow(0 0 5px rgba(255,215,0,0.5)); }
+      to { filter: drop-shadow(0 0 25px rgba(255,215,0,1)); }
+    }
+
+    .level-indicator {
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      border-radius: 25px;
+      padding: 15px 25px;
+      margin: 20px auto;
+      max-width: 400px;
+      border: 3px solid #ffd700;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: levelPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes levelPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .level-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 5px;
+    }
+
+    .level-subtitle {
+      font-size: 1em;
+      opacity: 0.9;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background: linear-gradient(45deg, #1a252f 0%, #2c3e50 100%);
+      border: 4px solid;
+      border-image: linear-gradient(45deg, #ffd700, #ff6b35, #e74c3c) 1;
+      border-radius: 20px;
+      margin: 20px 0;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .stat {
+      background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(231,76,60,0.2));
+      padding: 12px 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255,215,0,0.3);
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      transition: all 0.3s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(255,215,0,0.3);
+    }
+
+    .health-container {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border-radius: 20px;
+      padding: 15px;
+      margin: 15px 0;
+      border: 3px solid #fff;
+      box-shadow: 0 10px 30px rgba(231,76,60,0.5);
+    }
+
+    .health-bar {
+      width: 100%;
+      height: 25px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 2px solid #fff;
+      position: relative;
+    }
+
+    .health-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #27ae60, #2ecc71, #58d68d);
+      border-radius: 13px;
+      transition: all 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .health-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: healthShine 2s infinite;
+    }
+
+    @keyframes healthShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .health-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      font-size: 14px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+
+    #wasim {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(45deg, #3498db, #2980b9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(52,152,219,0.5);
+      border: 4px solid #fff;
+      animation: wasimFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes wasimFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    .monster {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #e74c3c, #c0392b);
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      animation: monsterFloat 2s ease-in-out infinite;
+      border: 3px solid #fff;
+    }
+
+    @keyframes monsterFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .monster:hover {
+      transform: scale(1.2) rotate(10deg);
+      box-shadow: 0 10px 40px rgba(231,76,60,0.8);
+    }
+
+    .monster-health-bar {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 8px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 4px;
+      border: 1px solid #fff;
+    }
+
+    .monster-health-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e74c3c, #c0392b);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .bullet {
+      position: absolute;
+      width: 8px;
+      height: 20px;
+      background: linear-gradient(0deg, #f1c40f, #f39c12);
+      border-radius: 4px;
+      box-shadow: 0 0 15px #f1c40f;
+      animation: bulletGlow 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes bulletGlow {
+      from { box-shadow: 0 0 15px #f1c40f; }
+      to { box-shadow: 0 0 25px #f1c40f, 0 0 35px #f39c12; }
+    }
+
+    .explosion {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, #ff6b35 0%, #e74c3c 30%, transparent 70%);
+      border-radius: 50%;
+      animation: explode 0.8s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes explode {
+      0% { 
+        transform: scale(0) rotate(0deg); 
+        opacity: 1; 
+      }
+      50% {
+        transform: scale(1.2) rotate(180deg);
+      }
+      100% { 
+        transform: scale(2) rotate(360deg); 
+        opacity: 0; 
+      }
+    }
+
+    .floating-text {
+      position: absolute;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffd700;
+      pointer-events: none;
+      animation: floatUp 2s ease-out forwards;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      z-index: 100;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      50% { opacity: 1; transform: translateY(-30px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
+    }
+
+    .controls {
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .control-btn {
+      padding: 15px 25px;
+      background: linear-gradient(45deg, #27ae60, #2ecc71);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(39,174,96,0.4);
+      background: linear-gradient(45deg, #2ecc71, #58d68d);
+    }
+
+    .control-btn:disabled {
+      background: linear-gradient(45deg, #7f8c8d, #95a5a6);
+      cursor: not-allowed;
+      transform: none;
+      opacity: 0.7;
+    }
+
+    #gameLog {
+      max-height: 200px;
+      overflow-y: auto;
+      background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(26,26,46,0.8));
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: right;
+      font-size: 14px;
+      border: 2px solid rgba(255,215,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .log-entry {
+      margin: 8px 0;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, rgba(231,76,60,0.2), rgba(255,215,0,0.1));
+      border-radius: 8px;
+      animation: slideIn 0.5s ease;
+      border-left: 4px solid #ffd700;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(26,26,46,0.95));
+      padding: 40px;
+      border-radius: 20px;
+      border: 4px solid #ffd700;
+      z-index: 1000;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+
+    .wave-indicator {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      padding: 15px 20px;
+      border-radius: 15px;
+      font-weight: bold;
+      font-size: 16px;
+      border: 2px solid #ffd700;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    }
+
+    .level-progress {
+      width: 100%;
+      height: 12px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 6px;
+      margin-top: 10px;
+      border: 1px solid #ffd700;
+      overflow: hidden;
+    }
+
+    .level-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 5px;
+      transition: width 0.5s ease;
+      animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+      0%, 100% { box-shadow: inset 0 0 10px rgba(255,255,255,0.3); }
+      50% { box-shadow: inset 0 0 20px rgba(255,255,255,0.6); }
+    }
+
+    .combo-indicator {
+      position: absolute;
+      top: 80px;
+      right: 15px;
+      background: linear-gradient(45deg, #ff6b35, #e74c3c);
+      padding: 10px 15px;
+      border-radius: 15px;
+      font-weight: bold;
+      border: 2px solid #ffd700;
+      animation: comboGlow 1s ease-in-out infinite alternate;
+      display: none;
+    }
+
+    @keyframes comboGlow {
+      from { box-shadow: 0 0 10px rgba(255,107,53,0.5); }
+      to { box-shadow: 0 0 20px rgba(255,107,53,1); }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 10px; }
+      h1 { font-size: 2em; }
+      .game-area { height: 400px; }
+      .controls { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 وسيم نوب محارب الوحوش - من نوب إلى أسطورة 👾</h1>
+    
+    <div class="level-indicator" id="levelIndicator">
+      <div class="level-title" id="levelTitle">نوب مبتدئ</div>
+      <div class="level-subtitle" id="levelSubtitle">وسيم بدأ يتعلم القتال</div>
+      <div class="level-progress">
+        <div class="level-progress-fill" id="levelProgress" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="health-container">
+      <div style="margin-bottom: 10px; font-weight: bold; font-size: 16px;">💖 صحة وسيم</div>
+      <div class="health-bar">
+        <div class="health-fill" id="healthFill" style="width: 100%"></div>
+        <div class="health-text" id="healthText">100 / 100</div>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat">⭐ النقاط: <span id="score">0</span></div>
+      <div class="stat">💀 الوحوش المقتولة: <span id="kills">0</span></div>
+      <div class="stat">🌊 الموجة: <span id="wave">1</span></div>
+      <div class="stat">🎮 وسيم يلعب: <span id="robloxStatus">روبلوكس</span></div>
+      <div class="stat">⚡ مستوى السلاح: <span id="weaponLevel">1</span></div>
+      <div class="stat">🔥 الكومبو: <span id="combo">0</span></div>
+    </div>
+
+    <div class="game-area" id="gameArea">
+      <div id="wasim">وسيم<br>نوب</div>
+      <div class="wave-indicator" id="waveIndicator">الموجة 1</div>
+      <div class="combo-indicator" id="comboIndicator">🔥 كومبو x0</div>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn" onclick="shoot()">🔫 إطلاق النار (مسافة)</button>
+      <button class="control-btn" onclick="heal()" id="healBtn">💊 علاج (75 نقطة)</button>
+      <button class="control-btn" onclick="upgradeWeapon()" id="upgradeBtn">⚡ ترقية السلاح (150 نقطة)</button>
+      <button class="control-btn" onclick="pauseGame()" id="pauseBtn">⏸️ إيقاف</button>
+      <button class="control-btn" onclick="resetGame()">🔄 إعادة البدء</button>
+    </div>
+
+    <div id="gameLog"></div>
+  </div>
+
+  <script>
+    let gameState = {
+      score: 0,
+      health: 100,
+      maxHealth: 100,
+      kills: 0,
+      wave: 1,
+      paused: false,
+      gameOver: false,
+      weaponLevel: 1,
+      playerLevel: 1,
+      levelProgress: 0,
+      combo: 0,
+      comboTimer: 0,
+      monsters: [],
+      bullets: [],
+      lastShot: 0,
+      shootCooldown: 400,
+      difficultyMultiplier: 1
+    };
+
+    const gameArea = document.getElementById('gameArea');
+    const wasim = document.getElementById('wasim');
+    const gameLog = document.getElementById('gameLog');
+
+    const monsterEmojis = ['👹', '👺', '💀', '👻', '🤖', '👾', '🦹', '🧌', '🐲', '🦖'];
+    const robloxActivities = ['روبلوكس', 'ماين كرافت', 'فورتنايت', 'فري فاير', 'أمونغ أس', 'بابجي'];
+
+    const playerLevels = [
+      { name: 'نوب مبتدئ', subtitle: 'وسيم بدأ يتعلم القتال', killsRequired: 0, color: '#95a5a6' },
+      { name: 'نوب', subtitle: 'وسيم لا يزال يتعلم', killsRequired: 10, color: '#3498db' },
+      { name: 'نوب برو', subtitle: 'وسيم بدأ يتحسن', killsRequired: 25, color: '#27ae60' },
+      { name: 'نوب ماكس', subtitle: 'وسيم أصبح قوي', killsRequired: 50, color: '#f39c12' },
+      { name: 'برو', subtitle: 'وسيم محارب حقيقي', killsRequired: 100, color: '#e67e22' },
+      { name: 'برو ألترا', subtitle: 'وسيم مدمر الوحوش', killsRequired: 200, color: '#e74c3c' },
+      { name: 'أسطورة', subtitle: 'وسيم ملك المعارك', killsRequired: 500, color: '#9b59b6' }
+    ];
+
+    let gameInterval;
+    let monsterSpawnInterval;
+    let comboInterval;
+
+    function startGame() {
+      gameInterval = setInterval(gameLoop, 40);
+      monsterSpawnInterval = setInterval(spawnMonster, Math.max(800, 2000 - (gameState.wave * 100)));
+      comboInterval = setInterval(updateCombo, 100);
+      addLog('🎮 بدأت المعركة! وسيم سيصبح أسطورة!');
+      updateRobloxStatus();
+    }
+
+    function gameLoop() {
+      if (gameState.paused || gameState.gameOver) return;
+      
+      moveBullets();
+      moveMonsters();
+      checkCollisions();
+      updateWave();
+      updatePlayerLevel();
+      updateDisplay();
+    }
+
+    function spawnMonster() {
+      if (gameState.paused || gameState.gameOver) return;
+      
+      const monsterHealth = Math.floor(20 * gameState.wave * gameState.difficultyMultiplier);
+      const monster = {
+        id: Date.now() + Math.random(),
+        x: Math.random() * (gameArea.offsetWidth - 80),
+        y: -80,
+        health: monsterHealth,
+        maxHealth: monsterHealth,
+        speed: Math.min(5, 1 + (gameState.wave * 0.3) + (gameState.difficultyMultiplier * 0.5)),
+        emoji: monsterEmojis[Math.floor(Math.random() * monsterEmojis.length)],
+        points: Math.floor(50 * gameState.wave * gameState.difficultyMultiplier)
+      };
+      
+      gameState.monsters.push(monster);
+      createMonsterElement(monster);
+    }
+
+    function createMonsterElement(monster) {
+      const monsterEl = document.createElement('div');
+      monsterEl.className = 'monster';
+      monsterEl.id = `monster-${monster.id}`;
+      monsterEl.style.left = monster.x + 'px';
+      monsterEl.style.top = monster.y + 'px';
+      monsterEl.innerHTML = monster.emoji;
+      monsterEl.onclick = () => shootAtMonster(monster);
+      
+      const healthBar = document.createElement('div');
+      healthBar.className = 'monster-health-bar';
+      const healthFill = document.createElement('div');
+      healthFill.className = 'monster-health-fill';
+      healthFill.style.width = '100%';
+      healthBar.appendChild(healthFill);
+      monsterEl.appendChild(healthBar);
+      
+      gameArea.appendChild(monsterEl);
+    }
+
+    function shoot() {
+      const now = Date.now();
+      if (now - gameState.lastShot < gameState.shootCooldown) return;
+      
+      gameState.lastShot = now;
+      
+      const bulletDamage = Math.floor(15 * gameState.weaponLevel * (1 + gameState.playerLevel * 0.2));
+      const bullet = {
+        id: Date.now(),
+        x: gameArea.offsetWidth / 2,
+        y: gameArea.offsetHeight - 120,
+        speed: Math.min(15, 8 + gameState.weaponLevel),
+        damage: bulletDamage
+      };
+      
+      gameState.bullets.push(bullet);
+      createBulletElement(bullet);
+      
+      addLog(`🔫 وسيم أطلق النار! (ضرر: ${bullet.damage})`);
+    }
+
+    function shootAtMonster(monster) {
+      const damage = Math.floor(20 * gameState.weaponLevel * (1 + gameState.playerLevel * 0.3));
+      monster.health -= damage;
+      
+      createFloatingText(monster.x + 40, monster.y + 40, `-${damage}`);
+      
+      const monsterEl = document.getElementById(`monster-${monster.id}`);
+      if (monsterEl) {
+        const healthFill = monsterEl.querySelector('.monster-health-fill');
+        healthFill.style.width = (monster.health / monster.maxHealth * 100) + '%';
+        
+        monsterEl.style.animation = 'none';
+        monsterEl.offsetHeight;
+        monsterEl.style.animation = 'monsterFloat 2s ease-in-out infinite';
+        
+        if (monster.health <= 0) {
+          killMonster(monster);
+        }
+      }
+    }
+
+    function createBulletElement(bullet) {
+      const bulletEl = document.createElement('div');
+      bulletEl.className = 'bullet';
+      bulletEl.id = `bullet-${bullet.id}`;
+      bulletEl.style.left = bullet.x + 'px';
+      bulletEl.style.bottom = (gameArea.offsetHeight - bullet.y) + 'px';
+      gameArea.appendChild(bulletEl);
+    }
+
+    function moveBullets() {
+      gameState.bullets.forEach((bullet, index) => {
+        bullet.y -= bullet.speed;
+        const bulletEl = document.getElementById(`bullet-${bullet.id}`);
+        
+        if (bulletEl) {
+          bulletEl.style.bottom = (gameArea.offsetHeight - bullet.y) + 'px';
+          
+          if (bullet.y < 0) {
+            bulletEl.remove();
+            gameState.bullets.splice(index, 1);
+          }
+        }
+      });
+    }
+
+    function moveMonsters() {
+      gameState.monsters.forEach((monster, index) => {
+        monster.y += monster.speed;
+        const monsterEl = document.getElementById(`monster-${monster.id}`);
+        
+        if (monsterEl) {
+          monsterEl.style.top = monster.y + 'px';
+          
+          if (monster.y > gameArea.offsetHeight - 80) {
+            const damage = Math.floor(15 * gameState.difficultyMultiplier);
+            gameState.health -= damage;
+            gameState.combo = 0;
+            addLog(`💥 وحش وصل لوسيم! الضرر: ${damage} - الصحة: ${gameState.health}`);
+            
+            if (gameState.health <= 0) {
+              endGame();
+            }
+            
+            monsterEl.remove();
+            gameState.monsters.splice(index, 1);
+          }
+        }
+      });
+    }
+
+    function checkCollisions() {
+      gameState.bullets.forEach((bullet, bulletIndex) => {
+        gameState.monsters.forEach((monster, monsterIndex) => {
+          if (bullet.x >= monster.x && bullet.x <= monster.x + 80 &&
+              bullet.y >= monster.y && bullet.y <= monster.y + 80) {
+            
+            monster.health -= bullet.damage;
+            createFloatingText(monster.x + 40, monster.y + 40, `-${bullet.damage}`);
+            
+            const bulletEl = document.getElementById(`bullet-${bullet.id}`);
+            if (bulletEl) bulletEl.remove();
+            gameState.bullets.splice(bulletIndex, 1);
+            
+            if (monster.health <= 0) {
+              killMonster(monster);
+            } else {
+              const monsterEl = document.getElementById(`monster-${monster.id}`);
+              if (monsterEl) {
+                const healthFill = monsterEl.querySelector('.monster-health-fill');
+                healthFill.style.width = (monster.health / monster.maxHealth * 100) + '%';
+              }
+            }
+          }
+        });
+      });
+    }
+
+    function killMonster(monster) {
+      const monsterEl = document.getElementById(`monster-${monster.id}`);
+      if (monsterEl) {
+        createExplosion(monster.x + 40, monster.y + 40);
+        monsterEl.remove();
+      }
+      
+      const monsterIndex = gameState.monsters.findIndex(m => m.id === monster.id);
+      if (monsterIndex > -1) {
+        gameState.monsters.splice(monsterIndex, 1);
+      }
+      
+      gameState.kills++;
+      gameState.combo++;
+      gameState.comboTimer = 300; // 3 seconds
+      
+      let points = monster.points;
+      if (gameState.combo > 1) {
+        points = Math.floor(points * (1 + gameState.combo * 0.1));
+      }
+      
+      gameState.score += points;
+      
+      addLog(`💀 وسيم قتل ${monster.emoji}! (+${points} نقطة) كومبو: ${gameState.combo}`);
+      createFloatingText(monster.x + 40, monster.y + 40, `+${points}`);
+      
+      if (gameState.combo > 3) {
+        showComboIndicator();
+      }
+    }
+
+    function createExplosion(x, y) {
+      const explosion = document.createElement('div');
+      explosion.className = 'explosion';
+      explosion.style.left = (x - 60) + 'px';
+      explosion.style.top = (y - 60) + 'px';
+      gameArea.appendChild(explosion);
+      
+      setTimeout(() => explosion.remove(), 800);
+    }
+
+    function createFloatingText(x, y, text) {
+      const floatingText = document.createElement('div');
+      floatingText.className = 'floating-text';
+      floatingText.textContent = text;
+      floatingText.style.left = x + 'px';
+      floatingText.style.top = y + 'px';
+      
+      if (text.includes('+')) {
+        floatingText.style.color = '#2ecc71';
+      } else if (text.includes('-')) {
+        floatingText.style.color = '#e74c3c';
+      }
+      
+      gameArea.appendChild(floatingText);
+      
+      setTimeout(() => floatingText.remove(), 2000);
+    }
+
+    function showComboIndicator() {
+      const comboEl = document.getElementById('comboIndicator');
+      comboEl.textContent = `🔥 كومبو x${gameState.combo}`;
+      comboEl.style.display = 'block';
+    }
+
+    function updateCombo() {
+      if (gameState.comboTimer > 0) {
+        gameState.comboTimer--;
+      } else if (gameState.combo > 0) {
+        gameState.combo = 0;
+        document.getElementById('comboIndicator').style.display = 'none';
+      }
+    }
+
+    function updateWave() {
+      const newWave = Math.floor(gameState.kills / 15) + 1;
+      if (newWave > gameState.wave) {
+        gameState.wave = newWave;
+        gameState.difficultyMultiplier = 1 + (gameState.wave - 1) * 0.2;
+        
+        addLog(`🌊 موجة جديدة! الموجة ${gameState.wave} - الوحوش أقوى وأسرع!`);
+        document.getElementById('waveIndicator').textContent = `الموجة ${gameState.wave}`;
+        
+        // Increase spawn rate
+        clearInterval(monsterSpawnInterval);
+        monsterSpawnInterval = setInterval(spawnMonster, Math.max(500, 2000 - (gameState.wave * 150)));
+        
+        // Bonus health for surviving wave
+        if (gameState.wave > 1) {
+          gameState.health = Math.min(gameState.maxHealth, gameState.health + 20);
+          addLog(`💖 مكافأة البقاء! +20 صحة`);
+        }
+      }
+    }
+
+    function updatePlayerLevel() {
+      const currentLevel = playerLevels.find(level => 
+        gameState.kills >= level.killsRequired && 
+        (playerLevels.indexOf(level) === playerLevels.length - 1 || 
+         gameState.kills < playerLevels[playerLevels.indexOf(level) + 1].killsRequired)
+      );
+      
+      if (currentLevel && playerLevels.indexOf(currentLevel) + 1 !== gameState.playerLevel) {
+        gameState.playerLevel = playerLevels.indexOf(currentLevel) + 1;
+        
+        document.getElementById('levelTitle').textContent = currentLevel.name;
+        document.getElementById('levelSubtitle').textContent = currentLevel.subtitle;
+        document.getElementById('levelIndicator').style.borderColor = currentLevel.color;
+        
+        wasim.innerHTML = `وسيم<br>${currentLevel.name}`;
+        wasim.style.background = `linear-gradient(45deg, ${currentLevel.color}, #2980b9)`;
+        
+        addLog(`🎉 ترقية! وسيم أصبح ${currentLevel.name}!`);
+        
+        // Level up bonuses
+        gameState.maxHealth += 25;
+        gameState.health = gameState.maxHealth;
+        gameState.score += 200;
+        
+        createFloatingText(gameArea.offsetWidth / 2, gameArea.offsetHeight / 2, `مستوى جديد!`);
+      }
+      
+      // Update progress bar
+      const nextLevel = playerLevels[gameState.playerLevel];
+      if (nextLevel) {
+        const currentRequirement = playerLevels[gameState.playerLevel - 1].killsRequired;
+        const nextRequirement = nextLevel.killsRequired;
+        const progress = Math.min(100, ((gameState.kills - currentRequirement) / (nextRequirement - currentRequirement)) * 100);
+        document.getElementById('levelProgress').style.width = progress + '%';
+      } else {
+        document.getElementById('levelProgress').style.width = '100%';
+      }
+    }
+
+    function heal() {
+      if (gameState.score >= 75 && gameState.health < gameState.maxHealth) {
+        gameState.score -= 75;
+        const healAmount = Math.min(50, gameState.maxHealth - gameState.health);
+        gameState.health += healAmount;
+        addLog(`💊 وسيم تعالج! +${healAmount} صحة`);
+        createFloatingText(gameArea.offsetWidth / 2, gameArea.offsetHeight - 100, `+${healAmount} صحة`);
+      }
+    }
+
+    function upgradeWeapon() {
+      if (gameState.score >= 150) {
+        gameState.score -= 150;
+        gameState.weaponLevel++;
+        gameState.shootCooldown = Math.max(100, gameState.shootCooldown - 30);
+        addLog(`⚡ ترقية السلاح للمستوى ${gameState.weaponLevel}! سرعة أكبر وضرر أقوى!`);
+        createFloatingText(gameArea.offsetWidth / 2, gameArea.offsetHeight / 2, `سلاح مستوى ${gameState.weaponLevel}!`);
+      }
+    }
+
+    function pauseGame() {
+      gameState.paused = !gameState.paused;
+      document.getElementById('pauseBtn').textContent = gameState.paused ? '▶️ تشغيل' : '⏸️ إيقاف';
+      addLog(gameState.paused ? '⏸️ اللعبة متوقفة' : '▶️ اللعبة مستمرة');
+    }
+
+    function updateRobloxStatus() {
+      setInterval(() => {
+        const activity = robloxActivities[Math.floor(Math.random() * robloxActivities.length)];
+        document.getElementById('robloxStatus').textContent = activity;
+      }, 4000);
+    }
+
+    function updateDisplay() {
+      document.getElementById('score').textContent = gameState.score.toLocaleString();
+      document.getElementById('kills').textContent = gameState.kills;
+      document.getElementById('wave').textContent = gameState.wave;
+      document.getElementById('weaponLevel').textContent = gameState.weaponLevel;
+      document.getElementById('combo').textContent = gameState.combo;
+      
+      // Update health bar
+      const healthPercentage = (gameState.health / gameState.maxHealth) * 100;
+      document.getElementById('healthFill').style.width = healthPercentage + '%';
+      document.getElementById('healthText').textContent = `${gameState.health} / ${gameState.maxHealth}`;
+      
+      // Change health bar color based on health
+      const healthFill = document.getElementById('healthFill');
+      if (healthPercentage > 60) {
+        healthFill.style.background = 'linear-gradient(90deg, #27ae60, #2ecc71, #58d68d)';
+      } else if (healthPercentage > 30) {
+        healthFill.style.background = 'linear-gradient(90deg, #f39c12, #f1c40f, #f4d03f)';
+      } else {
+        healthFill.style.background = 'linear-gradient(90deg, #e74c3c, #ec7063, #f1948a)';
+      }
+      
+      // Update button states
+      document.getElementById('healBtn').disabled = gameState.score < 75 || gameState.health >= gameState.maxHealth;
+      document.getElementById('upgradeBtn').disabled = gameState.score < 150;
+      
+      // Update heal button text
+      document.getElementById('healBtn').textContent = `💊 علاج (75 نقطة) - ${Math.min(50, gameState.maxHealth - gameState.health)} صحة`;
+    }
+
+    function addLog(message) {
+      const logEntry = document.createElement('div');
+      logEntry.className = 'log-entry';
+      logEntry.textContent = message;
+      gameLog.appendChild(logEntry);
+      
+      if (gameLog.children.length > 25) {
+        gameLog.removeChild(gameLog.firstChild);
+      }
+      
+      gameLog.scrollTop = gameLog.scrollHeight;
+    }
+
+    function endGame() {
+      gameState.gameOver = true;
+      clearInterval(gameInterval);
+      clearInterval(monsterSpawnInterval);
+      clearInterval(comboInterval);
+      
+      const finalLevel = playerLevels[gameState.playerLevel - 1];
+      
+      const gameOverDiv = document.createElement('div');
+      gameOverDiv.className = 'game-over';
+      gameOverDiv.innerHTML = `
+        <h2 style="color: #e74c3c; margin-bottom: 20px;">💀 انتهت المعركة! 💀</h2>
+        <p style="font-size: 1.2em; margin: 15px 0;">وسيم قاتل بشجاعة لكنه سقط!</p>
+        <div style="background: linear-gradient(45deg, rgba(255,215,0,0.2), rgba(231,76,60,0.2)); padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px solid #ffd700;">
+          <p><strong>🏆 المستوى النهائي:</strong> ${finalLevel.name}</p>
+          <p><strong>⭐ النقاط النهائية:</strong> ${gameState.score.toLocaleString()}</p>
+          <p><strong>💀 الوحوش المقتولة:</strong> ${gameState.kills}</p>
+          <p><strong>🌊 وصلت للموجة:</strong> ${gameState.wave}</p>
+          <p><strong>⚡ مستوى السلاح:</strong> ${gameState.weaponLevel}</p>
+          <p><strong>🔥 أعلى كومبو:</strong> ${Math.max(...[gameState.combo, 0])}</p>
+        </div>
+        <button class="control-btn" onclick="resetGame()" style="font-size: 1.1em; padding: 15px 30px;">🔄 قاتل مرة أخرى</button>
+      `;
+      gameArea.appendChild(gameOverDiv);
+      
+      addLog(`💀 وسيم ${finalLevel.name} سقط في المعركة! لكنه كان محاربًا شجاعًا!`);
+    }
+
+    function resetGame() {
+      clearInterval(gameInterval);
+      clearInterval(monsterSpawnInterval);
+      clearInterval(comboInterval);
+      
+      gameState = {
+        score: 0,
+        health: 100,
+        maxHealth: 100,
+        kills: 0,
+        wave: 1,
+        paused: false,
+        gameOver: false,
+        weaponLevel: 1,
+        playerLevel: 1,
+        levelProgress: 0,
+        combo: 0,
+        comboTimer: 0,
+        monsters: [],
+        bullets: [],
+        lastShot: 0,
+        shootCooldown: 400,
+        difficultyMultiplier: 1
+      };
+      
+      gameArea.innerHTML = '<div id="wasim">وسيم<br>نوب مبتدئ</div><div class="wave-indicator" id="waveIndicator">الموجة 1</div><div class="combo-indicator" id="comboIndicator" style="display: none;">🔥 كومبو x0</div>';
+      gameLog.innerHTML = '';
+      
+      // Reset UI elements
+      document.getElementById('levelTitle').textContent = 'نوب مبتدئ';
+      document.getElementById('levelSubtitle').textContent = 'وسيم بدأ يتعلم القتال';
+      document.getElementById('levelIndicator').style.borderColor = '#95a5a6';
+      document.getElementById('levelProgress').style.width = '0%';
+      document.getElementById('pauseBtn').textContent = '⏸️ إيقاف';
+      
+      updateDisplay();
+      startGame();
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (gameState.gameOver) return;
+      
+      switch(e.code) {
+        case 'Space':
+          e.preventDefault();
+          shoot();
+          break;
+        case 'KeyH':
+          heal();
+          break;
+        case 'KeyU':
+          upgradeWeapon();
+          break;
+        case 'KeyP':
+          pauseGame();
+          break;
+        case 'KeyR':
+          resetGame();
+          break;
+      }
+    });
+
+    // Touch controls for mobile
+    let touchStartY = 0;
+    gameArea.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    });
+
+    gameArea.addEventListener('touchend', (e) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const swipeDistance = touchStartY - touchEndY;
+      
+      if (Math.abs(swipeDistance) > 50) {
+        if (swipeDistance > 0) {
+          shoot(); // Swipe up to shoot
+        }
+      } else {
+        shoot(); // Tap to shoot
+      }
+    });
+
+    // Start the game
+    startGame();
+  </script>
+</body>
+</html>
