@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قتل النوب الثاني - مونتيوب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            width: 40%;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: #ffffff;
+            width: 100%;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .video-player {
+            width: 100%;
+            max-width: 1200px;
+            margin: 100px auto 20px;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        .video-details {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards 0.3s;
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .channel-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #ff0000;
+            transition: transform 0.3s ease;
+        }
+
+        .channel-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .channel-details h3 {
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .channel-details p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .like-button {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .like-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+        
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="window.location.href='index.html'">montube</div>
+        <div class="search-bar">
+            <input type="text" placeholder="ابحث عن فيديو...">
+        </div>
+        <div class="user-menu">تسجيل الدخول</div>
+    </header>
+
+    <div class="video-player">
+        <video src="vid/bandicam 2025-06-07 09-19-29-528.mp4" controls autoplay></video>
+    </div>
+
+    <div class="video-details">
+        <h1>قتل النوب الثاني</h1>
+        <div class="channel-info">
+            <img src="https://via.placeholder.com/48" class="channel-avatar" alt="صورة القناة">
+            <div class="channel-details">
+                <h3>MON32</h3>
+                <p><span id="views">1000</span> مشاهدة • نُشر قبل يومين</p>
+                <button class="like-button" onclick="likeVideo()">
+                    <span id="likes">0</span> إعجاب 👍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تأثيرات حركية للفيديو
+        document.querySelector('video').addEventListener('play', function() {
+            this.style.transform = 'scale(1.01)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+
+        document.querySelector('video').addEventListener('pause', function() {
+            this.style.transform = 'scale(1)';
+        });
+
+        // نظام الإعجابات
+        let likes = 0;
+        let views = 1000;
+        
+        function likeVideo() {
+            likes++;
+            views++;
+            document.getElementById('likes').textContent = likes;
+            document.getElementById('views').textContent = views;
+            
+            const button = document.querySelector('.like-button');
+            button.style.transform = 'scale(1.2)';
+            setTimeout(() => button.style.transform = 'scale(1)', 200);
+        }
+
+        // عداد المشاهدات
+        setInterval(() => {
+            views += Math.floor(Math.random() * 3);
+            document.getElementById('views').textContent = views;
+        }, 5000);
+    </script>
+</body>
+</html>
